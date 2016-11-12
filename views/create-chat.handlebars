@@ -1,37 +1,76 @@
 <h1 class="page-header">{{venue_name}}</h1>
 
-<button on-click="chat">Entrar al Chat</button>
+<span id="user-count"></span>
+<button id="enter-btn" on-click="chat">Entrar al Chat</button>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
 
-function chat(id,name){
-  console.log(id);
-  console.log(name);
+$(document).ready(check_for_chat);
 
+function check_for_chat(){
   $.ajax({
-      url: "http://localhost:3001/api/v1/create_chat/",
-      type: "Post",
-      data: {
-        chat_id: id,
-        chat_name: name
+      url: "https://"+ "{{host}}" +"/api/v1/is_chat_created/",
+      type: "Get",
+      beforeSend: function (request)
+      {
+        request.setRequestHeader("chat_id", "{{id}}");
+        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
       },
-      complete: function() {
+      complete: function(response) {
+        $("#enter-btn").click(join_chat);
+        $("#user-count").html("Usuarios en chat: " + response.users);
+      },
+      error: function(jqXHR, text, error)
+      {
+        if(jqXHR.status === 404)
+        {
+          $("#enter-btn").click(create_chat);
+          $("#enter-btn").html("Crear Chat");
+          $("#user-count").html("Actualmente no existe un chat en esta ubicación.");
+          create_chat();
+        }
+        else
+        {
+          console.log(error);
+        }
+      }
+  });
+}
+
+function create_chat(){
+  $.ajax({
+      url: "https://"+ "{{host}}" +"/api/v1/create_chat/",
+      type: "Get",
+      beforeSend: function (request)
+      {
+        request.setRequestHeader("chat_id", "{{id}}");
+        request.setRequestHeader("chat_name", "{{venue_name}}");
+        request.setRequestHeader("username", "{{username}}");
+        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
+      },
+      complete: join_chat
+  });
+}
+
+function join_chat()
+{
+  $.ajax({
+    url: "https://"+ "{{host}}" +"/api/v1/join_chat/",
+    type: "Get",
+    beforeSend: function (request)
+    {
+        request.setRequestHeader("chat_id", "{{id}}");
+        request.setRequestHeader("chat_name", "{{venue_name}}");
+        request.setRequestHeader("username", "{{username}}");
+        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
+    },
+    complete: function() {
         //called when complete
-        $.ajax({
-            url: "http://localhost:3001/api/v1/join_chat/",
-            type: "Post",
-            data: {
-              chat_id: id,
-              chat_name: name,
-              username: {{username}}
-            },
-            complete: function() {
-                //called when complete
-                window.location.replace(`http://localhost:3001/chat_room/${id}`);
-                console.log('process complete');
-            },
-        });
-      },
+        window.location.replace(`https://{{host}}/chat_room/${id}`);
+        console.log('process complete');
+    },
   });
 }
 

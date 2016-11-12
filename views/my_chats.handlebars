@@ -1,13 +1,51 @@
-<h2 class="page-header">Dashboard</h2>
+<h2 class="page-header">Mis Chats</h2>
 
 <div id="mapholder"></div>
 <p id="demo"></p>
 <div id="chats"></div>
 
+
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
-    window.onload = getLocation;
+window.onload = get_chats;
+
+function get_chats () {
+  var HTML = ""
+  for (var i = 0; i < 10; i++) {
+      HTML += '<a class="location-link" ' + "href=http://localhost:3000/locations/> Nombre </a>";
+  }
+  $.ajax({
+      url: "/my_chats_list/" + -33.4221357 + "/" + -70.6038334,
+      type: "Get",
+
+      complete: function() {
+          console.log('process complete');
+      },
+
+      success: function(data) {
+          console.log("entra aqui");
+          console.log(data);
+          var HTML = ""
+          HTML += '<h5>Aca puedes encontrar todos los chat cuales tienes permiso para ingresar </h5>';
+          for (var i = 0; i < data.length; i++) {
+              var obj = data[i];
+              HTML += '<a class="location-link" ' + "href=http://localhost:3000/locations/" + obj.id + ">" + obj.name + "</a>";
+          }
+          document.getElementById("chats").innerHTML = HTML;
+          console.log('process sucess');
+      },
+
+      error: function() {
+          console.log('process error');
+      },
+  });
+
+}
+
+
+console.log("asdasdasd");
     var x = document.getElementById("demo");
 
     function getLocation() {
@@ -53,7 +91,7 @@
             },
 
             success: function(data) {
-                console.log("entra aqui")
+                console.log("entra aqui");
                 console.log(data);
                 var HTML = ""
                 for (var i = 0; i < data.length; i++) {

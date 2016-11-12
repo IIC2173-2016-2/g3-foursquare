@@ -18,10 +18,25 @@ router.get('/locations', ensureAuthenticated, function(req, res){
 	//}
 	//else{
 		//res.redirect(login_path);
-	//}	
+	//}
+});
+
+router.get('/my_chats', ensureAuthenticated, function(req, res){
+		res.render('my_chats');
 });
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
+
+router.get('/my_chats_list/:lat/:long', function(req, res) {
+  var lat = req.params.lat;
+  var long = req.params.long;
+
+  console.log(lat);
+  console.log(long);
+	foursquare_venues(lat, long, function(venues){
+      res.json(venues);
+	});
+});
 
 router.get('/foursquare/:lat/:long', function(req, res) {
   var lat = req.params.lat;
@@ -58,7 +73,7 @@ function get_venue(venue_id, callback)
 	var body = [];
     var options = {
             host: 'api.foursquare.com',
-            path: `/v2/venues/${venue_id}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&v=20161101&m=foursquare`
+            path: `/v2/venues/${venue_id}?client_id=TLTQFJWE5METPKFLMEPIOQPDBUVSR2NLBSTRUIWGZRKYZECQ&client_secret=5Y3RZRKHJQQXF23GEREEWFOGSK40GKD2QK0QS0XFJQMPGFCT&v=20161101&m=foursquare`
     };
 
     https.request(options, function(res){
@@ -80,13 +95,11 @@ function foursquare_venues(lat, long, callback)
         https = require("https");
         var lat = lat;
         var long = long;
-
         var body = [];
         var venues;
-
         var options = {
                 host: 'api.foursquare.com',
-                path: `/v2/venues/search?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&v=20161101&m=foursquare&ll=${lat},${long}`
+                path: `/v2/venues/search?client_id=TLTQFJWE5METPKFLMEPIOQPDBUVSR2NLBSTRUIWGZRKYZECQ&client_secret=5Y3RZRKHJQQXF23GEREEWFOGSK40GKD2QK0QS0XFJQMPGFCT&v=20161101&m=foursquare&ll=${lat},${long}`
         };
 
         https.request(options, function(res){
@@ -106,12 +119,7 @@ function validate_token(req){}
 
 function ensureAuthenticated(req, res, next){
   return next();
-	//if(req.isAuthenticated()){
-		//return next();
-	//} else {
-		//req.flash('error_msg','You are not logged in');
-		//res.redirect('/users/login');
-	//}
+
 }
 
 module.exports = router;

@@ -6,19 +6,16 @@ var fs = require('fs');
 var http = require('http');
 var redis = require('redis');
 var app = express();
+var jwt = require('jsonwebtoken');
 
+var login = 'https://assw9.ing.puc.cl/users/login';
 
-// respond with "hello world" when a GET request is made to the homepage
+router.get('/', function(req, res){
+	res.redirect('/locations');
+})
 
-// Get Homepage
-var login_path = 'localhost:3000/login'
 router.get('/locations', ensureAuthenticated, function(req, res){
-	//if(validate_token(req)){
-		res.render('index');
-	//}
-	//else{
-		//res.redirect(login_path);
-	//}	
+	res.render('index');
 });
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
@@ -105,13 +102,20 @@ function foursquare_venues(lat, long, callback)
 function validate_token(req){}
 
 function ensureAuthenticated(req, res, next){
-  return next();
-	//if(req.isAuthenticated()){
-		//return next();
-	//} else {
-		//req.flash('error_msg','You are not logged in');
-		//res.redirect('/users/login');
-	//}
+	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
+	  if(decoded)
+	  {
+	  	return next();
+	  }
+	  else
+	  {
+	  	res.redirect(login);
+	  }
+	  if(err)
+	  {
+	  	console.log(err);
+	  }
+	});
 }
 
 module.exports = router;

@@ -15,8 +15,7 @@
     "express-handlebars": "*",
     "express-messages": "*",
     "express-session": "*",
-    "rand-token": "*",
-    "redis": "*"
+    "jsonwebtoken": "*"
   },
   "repository": {
   "type": "git",

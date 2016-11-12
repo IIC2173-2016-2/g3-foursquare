@@ -43,7 +43,9 @@ function show_venue(req, res)
 				username: req.user.username,
 				venue_name: venue_name,
 				photos: photos,
-				id: req.params.location_id
+				id: req.params.location_id,
+				key: process.env.CHAT_API_SECRET_KEY,
+				host: req.hostname
 			});
 		});
 	}
@@ -108,7 +110,7 @@ function ensureAuthenticated(req, res, next){
 	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
 	  if(decoded)
 	  {
-	  	req.user=decoded._doc;
+	  	req.user = decoded._doc;
 	  	return next();
 	  }
 	  else

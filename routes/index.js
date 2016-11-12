@@ -8,7 +8,7 @@ var redis = require('redis');
 var app = express();
 var jwt = require('jsonwebtoken');
 
-var login = 'https://assw9.ing.puc.cl/users/login';
+var login = '/users/login';
 
 router.get('/', function(req, res){
 	res.redirect('/locations');
@@ -109,7 +109,7 @@ function ensureAuthenticated(req, res, next){
 	  }
 	  else
 	  {
-	  	res.redirect(login);
+	  	res.redirect(302, login);
 	  }
 	  if(err)
 	  {

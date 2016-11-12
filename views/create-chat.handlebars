@@ -1,0 +1,38 @@
+<h1 class="page-header">{{venue_name}}</h1>
+
+<button on-click="chat">Entrar al Chat</button>
+
+<script>
+
+function chat(id,name){
+  console.log(id);
+  console.log(name);
+
+  $.ajax({
+      url: "http://localhost:3001/api/v1/create_chat/",
+      type: "Post",
+      data: {
+        chat_id: id,
+        chat_name: name
+      },
+      complete: function() {
+        //called when complete
+        $.ajax({
+            url: "http://localhost:3001/api/v1/join_chat/",
+            type: "Post",
+            data: {
+              chat_id: id,
+              chat_name: name,
+              username: {{username}}
+            },
+            complete: function() {
+                //called when complete
+                window.location.replace(`http://localhost:3001/chat_room/${id}`);
+                console.log('process complete');
+            },
+        });
+      },
+  });
+}
+
+</script>

@@ -1,0 +1,95 @@
+<h2 class="page-header">Dashboard</h2>
+
+<div id="mapholder"></div>
+<p id="demo"></p>
+<div id="chats"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+    window.onload = getLocation;
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function chat(id,name){
+      console.log(id);
+      console.log(name);
+
+      $.ajax({
+          url: "api/v1/create_chat/",
+          type: "Post",
+          data: {
+            chat_id: id,
+            chat_name: name,
+            username: 'User'
+
+          },
+
+          complete: function() {
+              //called when complete
+              console.log('process complete');
+          },
+    });
+  }
+
+
+
+    function showPosition(position) {
+        $.ajax({
+            url: "/foursquare/" + position.coords.latitude + "/" + position.coords.longitude,
+            type: "Get",
+
+            complete: function() {
+                //called when complete
+                console.log('process complete');
+            },
+
+            success: function(data) {
+                console.log(data);
+                var HTML = ""
+                for (var i = 0; i < data.length; i++) {
+                    var obj = data[i];
+                    HTML += '<a class="location-link" ' + "href=http://localhost:3000/locations/" + obj.id + ">" + obj.name + "</a>";
+                    //HTML +=  ' <button class=location-link onClick="chat(\'' + obj.id + '\'' +  ',' + '\'' + obj.name + '\' )"">'+ obj.name ;
+
+                    //HTML += "</button>";
+                }
+                document.getElementById("chats").innerHTML = HTML;
+                console.log('process sucess');
+            },
+
+            error: function() {
+                console.log('process error');
+            },
+        });
+        var latlon = position.coords.latitude + "," + position.coords.longitude;
+        var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" +
+            latlon + "&zoom=14&size=400x300&sensor=true&markers=color:blue%7Clabel:A%7C" + latlon;
+        document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
+    }
+
+    function showError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                x.innerHTML = "User denied the request for Geolocation."
+                break;
+            case error.POSITION_UNAVAILABLE:
+                x.innerHTML = "Location information is unavailable."
+                break;
+            case error.TIMEOUT:
+                x.innerHTML = "The request to get user location timed out."
+                break;
+            case error.UNKNOWN_ERROR:
+                x.innerHTML = "An unknown error occurred."
+                break;
+        }
+    }
+</script>

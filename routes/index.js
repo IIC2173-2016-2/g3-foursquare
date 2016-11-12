@@ -6,16 +6,20 @@ var fs = require('fs');
 var http = require('http');
 var redis = require('redis');
 var app = express();
+var jwt = require('jsonwebtoken');
 
+var login = '/users/login';
 
-// respond with "hello world" when a GET request is made to the homepage
+router.get('/', function(req, res){
+	res.redirect('/locations');
+})
 
-// Get Homepage
-var login_path = 'localhost:3000/login'
 router.get('/locations', ensureAuthenticated, function(req, res){
 	//if(validate_token(req)){
-		res.render('index');
-	//}
+	res.render('index',
+		{
+			host: req.hostname
+		});	//}
 	//else{
 		//res.redirect(login_path);
 	//}
@@ -55,7 +59,7 @@ function show_venue(req, res)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
 			res.render('create-chat', {
-				username: req.cookie.user.username,
+				username: req.user.username,
 				venue_name: venue_name,
 				photos: photos,
 				id: req.params.location_id
@@ -118,8 +122,22 @@ function foursquare_venues(lat, long, callback)
 function validate_token(req){}
 
 function ensureAuthenticated(req, res, next){
-  return next();
 
+	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
+	  if(decoded)
+	  {
+	  	req.user=decoded._doc;
+	  	return next();
+	  }
+	  else
+	  {
+	  	res.redirect(302, login);
+	  }
+	  if(err)
+	  {
+	  	console.log(err);
+	  }
+	});
 }
 
 module.exports = router;

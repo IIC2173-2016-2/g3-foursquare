@@ -15,7 +15,10 @@ router.get('/', function(req, res){
 })
 
 router.get('/locations', ensureAuthenticated, function(req, res){
-	res.render('index');
+	res.render('index', 
+		{
+			host: req.hostname
+		});
 });
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
@@ -37,7 +40,7 @@ function show_venue(req, res)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
 			res.render('create-chat', {
-				username: req.cookie.user.username,
+				username: req.user.username,
 				venue_name: venue_name,
 				photos: photos,
 				id: req.params.location_id
@@ -105,6 +108,7 @@ function ensureAuthenticated(req, res, next){
 	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
 	  if(decoded)
 	  {
+	  	req.user=decoded._doc;
 	  	return next();
 	  }
 	  else

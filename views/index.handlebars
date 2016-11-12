@@ -1,14 +1,20 @@
 <h2 class="page-header">Dashboard</h2>
 
+<div id="map"></div>
 <div id="mapholder"></div>
 <p id="demo"></p>
+
 <div id="chats"></div>
+
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
     window.onload = getLocation;
     var x = document.getElementById("demo");
+
+
+
 
     function getLocation() {
         if (navigator.geolocation) {
@@ -71,12 +77,34 @@
                 console.log('process error');
             },
         });
-        var latlon = position.coords.latitude + "," + position.coords.longitude;
-        var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" +
-            latlon + "&zoom=14&size=400x300&sensor=true&markers=color:blue%7Clabel:A%7C" + latlon;
-        document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: position.coords.latitude , lng: position.coords.longitude},
+          scrollwheel: false,
+          zoom: 16
+        });
+        var marker = new google.maps.Marker({
+          map: map,
+          position: {lat: position.coords.latitude , lng: position.coords.longitude},
+        });
+
+
+        // var latlon = position.coords.latitude + "," + position.coords.longitude;
+        // var img_url = "https://maps.googleapis.com/maps/api/staticmap?center=" +
+        //     latlon + "&zoom=14&size=400x300&sensor=true&markers=color:blue%7Clabel:A%7C" + latlon;
+        // document.getElementById("mapholder").innerHTML = "<img src='" + img_url + "'>";
     }
 
+    function initMap() {
+      // Create a map object and specify the DOM element for display.
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -33.4718999, lng: -70.9100197},
+        scrollwheel: false,
+        zoom: 8
+      });
+
+      console.log(map);
+    }
     function showError(error) {
         switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -94,3 +122,6 @@
         }
     }
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwnva8XrB18aFhSwZqQQSMRlp5ZkNy9LA&callback=initMap"
+async defer></script>

@@ -79,7 +79,7 @@ function get_venue(venue_id, callback)
 	var body = [];
     var options = {
             host: 'api.foursquare.com',
-            path: `/v2/venues/${venue_id}?client_id=TLTQFJWE5METPKFLMEPIOQPDBUVSR2NLBSTRUIWGZRKYZECQ&client_secret=5Y3RZRKHJQQXF23GEREEWFOGSK40GKD2QK0QS0XFJQMPGFCT&v=20161101&m=foursquare`
+            path: `/v2/venues/${venue_id}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&v=20161101&m=foursquare`
     };
 
     https.request(options, function(res){
@@ -105,7 +105,7 @@ function foursquare_venues(lat, long, callback)
         var venues;
         var options = {
                 host: 'api.foursquare.com',
-                path: `/v2/venues/search?client_id=TLTQFJWE5METPKFLMEPIOQPDBUVSR2NLBSTRUIWGZRKYZECQ&client_secret=5Y3RZRKHJQQXF23GEREEWFOGSK40GKD2QK0QS0XFJQMPGFCT&v=20161101&m=foursquare&ll=${lat},${long}`
+                path: `/v2/venues/search?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&v=20161101&m=foursquare&ll=${lat},${long}`
         };
 
         https.request(options, function(res){

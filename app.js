@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 var session = require('express-session');
 var routes = require('./routes/index');
+var chats = require('./routes/chats')
 
 // Init App
 var app = express();
@@ -28,11 +29,11 @@ app.use(session({
     saveUninitialized: true,
     resave: true
 }));
-
+app.use('/locations',chats)
 app.use('/', routes);
 
 // Set Port
-app.set('port', (process.env.PORT || 3000));
+app.set('port', (process.env.PORT || 9001));
 
 app.listen(app.get('port'), function(){
   console.log('Server started on port '+app.get('port'));

@@ -3,20 +3,15 @@
 <span id="user-count"></span>
 <button id="enter-btn" on-click="chat">Entrar al Chat</button>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
 
 $(document).ready(check_for_chat);
 function check_for_chat(){
   $.ajax({
-      url: "https://"+ "{{host}}" +"/api/v1/is_chat_created/",
+      url: 'locations/chat_created/{{id}}',
       type: "Get",
-      beforeSend: function (request)
-      {
-        request.setRequestHeader("chat_id", "{{id}}");
-        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
-      },
       complete: function(response) {
         $("#enter-btn").click(join_chat);
         $("#user-count").html("Usuarios en chat: " + response.users);
@@ -40,7 +35,7 @@ function check_for_chat(){
 
 function create_chat(){
   $.ajax({
-      url: "https://"+ "{{host}}" +"/api/v1/create_chat/",
+      url: "locations/create_chat/{{id}}/{{venue_name}}",
       type: "Get",
       beforeSend: function (request)
       {
@@ -56,18 +51,11 @@ function create_chat(){
 function join_chat()
 {
   $.ajax({
-    url: "https://"+ "{{host}}" +"/api/v1/join_chat/",
+    url: "locations/join_chat/",
     type: "Get",
-    beforeSend: function (request)
-    {
-        request.setRequestHeader("chat_id", "{{id}}");
-        request.setRequestHeader("chat_name", "{{venue_name}}");
-        request.setRequestHeader("username", "{{username}}");
-        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
-    },
     complete: function() {
         //called when complete
-        window.location.replace(`https://{{host}}/chat_room/${id}`);
+        window.location.replace(`https://{{host}}/chat_room/{{id}}`);
         console.log('process complete');
     },
   });

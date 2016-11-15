@@ -7,7 +7,7 @@
 <div id="chats"></div>
 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
     window.onload = getLocation;
@@ -64,7 +64,8 @@
                 var HTML = ""
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
-                    HTML += '<a class="location-link" ' + "href=http://" + "{{host}}"+":3000" + "/locations/" + obj.id + ">" + obj.name + "</a>";
+
+                    HTML += '<a class="location-link" ' + "href=https://" + "{{host}}" + "/locations/" + obj.id + ">" + obj.name + "</a>";
                     //HTML +=  ' <button class=location-link onClick="chat(\'' + obj.id + '\'' +  ',' + '\'' + obj.name + '\' )"">'+ obj.name ;
 
                     //HTML += "</button>";

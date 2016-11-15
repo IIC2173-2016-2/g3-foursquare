@@ -11,7 +11,7 @@ $(document).ready(check_for_chat);
 
 function check_for_chat(){
   $.ajax({
-      url: 'locations/chat_created/{{id}}',
+      url: '/locations/chat_created/{{id}}',
       type: "Get",
       complete: function(response) {
         $("#enter-btn").click(join_chat);
@@ -36,7 +36,7 @@ function check_for_chat(){
 
 function create_chat(){
   $.ajax({
-      url: "locations/create_chat/{{id}}/{{venue_name}}",
+      url: "/locations/create_chat/{{id}}/{{venue_name}}",
       type: "Get",
       beforeSend: function (request)
       {
@@ -52,11 +52,11 @@ function create_chat(){
 function join_chat()
 {
   $.ajax({
-    url: "locations/join_chat/",
+    url: "/locations/join_chat/",
     type: "Get",
     complete: function() {
         //called when complete
-        window.location.replace(`https://{{host}}/chat_room/{{id}}`);
+        //window.location.replace(`https://{{host}}/chat_room/{{id}}`);
         console.log('process complete');
     },
   });

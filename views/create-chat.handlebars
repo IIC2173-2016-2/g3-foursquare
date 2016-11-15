@@ -1,4 +1,4 @@
-<h1 class="page-header">{{venue_name}}</h1>
+<h1 class="page-header">{{prefix}}</h1>
 
 <span id="user-count"></span>
 <button id="enter-btn" on-click="chat">Entrar al Chat</button>
@@ -8,7 +8,6 @@
 <script>
 
 $(document).ready(check_for_chat);
-
 function check_for_chat(){
   $.ajax({
       url: '/locations/chat_created/{{id}}',

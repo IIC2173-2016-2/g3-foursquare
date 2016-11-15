@@ -58,8 +58,10 @@ function show_venue(req, res)
 	if(true)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
+			console.log(photos);
 			res.render('create-chat', {
 				username: req.user.username,
+				prefix: photos['prefix'],
 				venue_name: venue_name,
 				photos: photos,
 				id: req.params.location_id,
@@ -89,6 +91,8 @@ function get_venue(venue_id, callback)
 			body = Buffer.concat(body).toString();
 			response = JSON.parse(body);
 			venue = response['response']['venue'];
+			foto = response['response']['venue']['bestPhoto'];
+			console.log(foto);
 			callback(venue['name'], venue['photos']);
 		});
 	}).end();
@@ -114,6 +118,7 @@ function foursquare_venues(lat, long, callback)
 		res.on('end', function(){
 			body = Buffer.concat(body).toString();
 			venues = JSON.parse(body)['response']['venues'];
+
 			callback(venues);
 		});
 	}).end();
@@ -123,6 +128,9 @@ function foursquare_venues(lat, long, callback)
 function validate_token(req){}
 
 function ensureAuthenticated(req, res, next){
+
+
+		return next();
 
 	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
 	  if(decoded)

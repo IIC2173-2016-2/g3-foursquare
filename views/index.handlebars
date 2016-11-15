@@ -64,7 +64,7 @@
                 var HTML = ""
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
-                    HTML += '<a class="location-link" ' + "href=https://www." + "{{host}}" + "/locations/" + obj.id + ">" + obj.name + "</a>";
+                    HTML += '<a class="location-link" ' + "href=http://" + "{{host}}"+":3000" + "/locations/" + obj.id + ">" + obj.name + "</a>";
                     //HTML +=  ' <button class=location-link onClick="chat(\'' + obj.id + '\'' +  ',' + '\'' + obj.name + '\' )"">'+ obj.name ;
 
                     //HTML += "</button>";

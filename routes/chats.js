@@ -7,6 +7,7 @@ var http = require('http');
 var jwt = require('jsonwebtoken');
 
 router.get('/chat_created/:id',function(req,res){
+  var id = req.params.id
   res.setHeader('chat_id',id);
   res.setHeader('CHAT_API_SECRET_KEY',process.env.CHAT_API_SECRET_KEY)
   res.redirect('/api/v1/is_chat_created');

@@ -11,13 +11,8 @@ $(document).ready(check_for_chat);
 
 function check_for_chat(){
   $.ajax({
-      url: "https://"+ "{{host}}" +"/api/v1/is_chat_created/",
+      url: 'location/chat_created/{{id}}',
       type: "Get",
-      beforeSend: function (request)
-      {
-        request.setRequestHeader("chat_id", "{{id}}");
-        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
-      },
       complete: function(response) {
         $("#enter-btn").click(join_chat);
         $("#user-count").html("Usuarios en chat: " + response.users);

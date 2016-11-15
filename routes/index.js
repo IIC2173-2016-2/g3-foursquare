@@ -55,6 +55,7 @@ router.get('/foursquare/:lat/:long', function(req, res) {
 
 function show_venue(req, res)
 {
+	console.log("Hola")
 	if(true)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
@@ -129,10 +130,7 @@ function validate_token(req){}
 
 function ensureAuthenticated(req, res, next){
 
-
-		return next();
-
-	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
+		jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
 	  if(decoded)
 	  {
 	  	req.user = decoded._doc;

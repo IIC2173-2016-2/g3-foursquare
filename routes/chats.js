@@ -23,6 +23,7 @@ function ensureAuthenticated(req, res, next){
 	  	console.log(err);
 	  }
 	});
+}	
 
 
 router.get('/chat_created/:id',function(req,res){
@@ -91,25 +92,6 @@ function get_venue(venue_id, callback)
 			callback(venue['name'], venue['photos']);
 		});
 	}).end();
-}
-
-function ensureAuthenticated(req, res, next){
-
-	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
-	  if(decoded)
-	  {
-	  	req.user = decoded._doc;
-	  	return next();
-	  }
-	  else
-	  {
-	  	res.redirect(302, login);
-	  }
-	  if(err)
-	  {
-	  	console.log(err);
-	  }
-	});
 }
 
 module.exports = router;

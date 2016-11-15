@@ -38,13 +38,6 @@ function create_chat(){
   $.ajax({
       url: "/locations/create_chat/{{id}}/{{venue_name}}",
       type: "Get",
-      beforeSend: function (request)
-      {
-        request.setRequestHeader("chat_id", "{{id}}");
-        request.setRequestHeader("chat_name", "{{venue_name}}");
-        request.setRequestHeader("username", "{{username}}");
-        request.setRequestHeader("CHAT_API_SECRET_KEY", "{{key}}");
-      },
       complete: join_chat
   });
 }

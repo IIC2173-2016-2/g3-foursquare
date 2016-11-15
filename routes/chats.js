@@ -23,7 +23,7 @@ function ensureAuthenticated(req, res, next){
 	  	console.log(err);
 	  }
 	});
-}	
+}
 
 
 router.get('/chat_created/:id',function(req,res){

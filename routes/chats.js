@@ -6,21 +6,49 @@ var fs = require('fs');
 var http = require('http');
 var jwt = require('jsonwebtoken');
 
+function ensureAuthenticated(req, res, next){
+
+	jwt.verify(req.cookies['access-token'], process.env.JWT_SECRET, function(err, decoded) {
+	  if(decoded)
+	  {
+	  	req.user = decoded._doc;
+	  	return next();
+	  }
+	  else
+	  {
+	  	res.redirect(302, login);
+	  }
+	  if(err)
+	  {
+	  	console.log(err);
+	  }
+	});
+
+
 router.get('/chat_created/:id',function(req,res){
   var id = req.params.id
   res.setHeader('chat_id',id);
   res.setHeader('CHAT_API_SECRET_KEY',process.env.CHAT_API_SECRET_KEY)
   res.redirect('/api/v1/is_chat_created');
 });
-router.get('/my_chats_list/:lat/:long', function(req, res) {
-  var lat = req.params.lat;
-  var long = req.params.long;
+router.get('/create_chat/:id/:venue',ensureAuthenticated, function(req, res) {
+  // LOOK IN COOKIE THE TOKEN USERNAME
+  var id = req.params.id
+  var venue = req.params.venue
+  res.setHeader('chat_id',id);
+  res.setHeader('chat_name',venue);
+  res.setHeader('CHAT_API_SECRET_KEY',process.env.CHAT_API_SECRET_KEY)
+  res.redirect('/api/v1/create_chat');
+});
 
-  console.log(lat);
-  console.log(long);
-	foursquare_venues(lat, long, function(venues){
-      res.json(venues);
-	});
+router.get('/join_chat/:id/:venue',ensureAuthenticated, function(req, res) {
+  var id = req.params.id
+  var venue = req.params.venue
+  res.setHeader('chat_id',id);
+  res.setHeader('user_id',req.user._id);
+  res.setHeader('username',req.user.username);
+  res.setHeader('CHAT_API_SECRET_KEY',process.env.CHAT_API_SECRET_KEY);
+  res.redirect('/api/v1/join_chat');
 });
 
 function show_venue(req, res)

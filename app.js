@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 var session = require('express-session');
 var routes = require('./routes/index');
+var chats = require('./routes/chats')
 
 // Init App
 var app = express();

@@ -30,15 +30,12 @@ router.get('/my_chats', ensureAuthenticated, function(req, res) {
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
 
-router.get('/my_chats_list/:lat/:long', function(req, res) {
-    var lat = req.params.lat;
-    var long = req.params.long;
+router.get('/my_chats_list', function(req, res) {
+/*
+DEVUELVE LOS CHATS EN LOS CUAL EL USUARIO ESTA HABILITADO PARA CHATEAR
+*/
 
-    console.log(lat);
-    console.log(long);
-    foursquare_venues(lat, long, function(venues) {
-        res.json(venues);
-    });
+
 });
 
 router.get('/foursquare/:lat/:long', function(req, res) {

@@ -19,19 +19,28 @@ function check_for_chat(){
   $.ajax({
       url: '/locations/chat_created/{{id}}',
       type: "Get",
-      complete: function(response) {
+      success: function(response) {
+        console.log("entra a success");
         $("#enter-btn").click(join_chat);
-        console.log(response);
-        $("#user-count").html("Usuarios en chat: " + response.users);
+
+        if (response.users != undefined) {
+          $("#user-count").html("Usuarios en chat: " + response.users);
+        }
+        else {
+          $("#user-count").html("Actualmente no existe un chat en esta ubicación.");
+
+        }
+
       },
       error: function(jqXHR, text, error)
       {
+        console.log(jqXHR.status);
         if(jqXHR.status === 404)
         {
           $("#enter-btn").click(create_chat);
           $("#enter-btn").html("Crear Chat");
           $("#user-count").html("Actualmente no existe un chat en esta ubicación.");
-          create_chat();
+        //  create_chat();
         }
         else
         {
@@ -42,15 +51,20 @@ function check_for_chat(){
 }
 
 function create_chat(){
+  console.log("create_chat");
+
   $.ajax({
       url: "/locations/create_chat/{{id}}/{{venue_name}}",
       type: "Get",
       complete: join_chat
   });
+
+
 }
 
 function join_chat()
 {
+  console.log("join_chat");
   $.ajax({
     url: "/locations/join_chat/",
     type: "Get",

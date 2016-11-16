@@ -65,9 +65,6 @@
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
                     HTML += '<a class="location-link" ' + "href=/locations/" + obj.id + ">" + obj.name + "</a>";
-                    //HTML +=  ' <button class=location-link onClick="chat(\'' + obj.id + '\'' +  ',' + '\'' + obj.name + '\' )"">'+ obj.name ;
-
-                    //HTML += "</button>";
                 }
                 document.getElementById("chats").innerHTML = HTML;
                 console.log('process sucess');

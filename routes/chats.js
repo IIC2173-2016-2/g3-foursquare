@@ -57,6 +57,8 @@ function show_venue(req, res)
 	if(true)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
+			console.log("asdkaspodaosdaopskdaskdoaskdok");
+			console.log(photos);
 			res.render('create-chat', {
 				username: req.user.username,
 				venue_name: venue_name,

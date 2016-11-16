@@ -1,19 +1,27 @@
-<h1 class="page-header">{{prefix}}</h1>
+<h1 class="page-header">{{venue_name}}</h1>
 
 <span id="user-count"></span>
 <button id="enter-btn" on-click="chat">Entrar al Chat</button>
+
+{{#if prefix}}
+  <img src="{{prefix}}{{width}}x{{height}}{{suffix}}">
+{{/if}}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
 
+
 $(document).ready(check_for_chat);
+
+
 function check_for_chat(){
   $.ajax({
       url: '/locations/chat_created/{{id}}',
       type: "Get",
       complete: function(response) {
         $("#enter-btn").click(join_chat);
+        console.log(response);
         $("#user-count").html("Usuarios en chat: " + response.users);
       },
       error: function(jqXHR, text, error)

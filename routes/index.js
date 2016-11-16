@@ -55,19 +55,32 @@ router.get('/foursquare/:lat/:long', function(req, res) {
 
 function show_venue(req, res)
 {
-	console.log("Hola")
 	if(true)
 	{
 		get_venue(req.params.location_id, function(venue_name, photos){
-			console.log(photos);
-			res.render('create-chat', {
-				username: req.user.username,
-				prefix: photos['prefix'],
-				venue_name: venue_name,
-				photos: photos,
-				id: req.params.location_id,
-				host: req.hostname
-			});
+			if (photos != undefined) { // Hay foto
+				res.render('create-chat', {
+					username: req.user.username,
+					prefix: photos['prefix'],
+					suffix: photos['suffix'],
+					width: photos['width'],
+					height: photos['height'],
+					venue_name: venue_name,
+					photos: photos,
+					id: req.params.location_id,
+					host: req.hostname
+				});
+			}
+			else {
+				res.render('create-chat', {
+					username: req.user.username,
+					venue_name: venue_name,
+					photos: photos,
+					id: req.params.location_id,
+					host: req.hostname
+				});
+			}
+
 		});
 	}
 	else{
@@ -92,9 +105,9 @@ function get_venue(venue_id, callback)
 			body = Buffer.concat(body).toString();
 			response = JSON.parse(body);
 			venue = response['response']['venue'];
-			foto = response['response']['venue']['bestPhoto'];
-			console.log(foto);
-			callback(venue['name'], venue['photos']);
+			if (venue != undefined) {
+				callback(venue['name'], venue['bestPhoto']);
+			}
 		});
 	}).end();
 }

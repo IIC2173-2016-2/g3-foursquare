@@ -34,7 +34,7 @@ router.get('/my_chats', ensureAuthenticated, function(req, res) {
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
 
 router.get('/my_chats_list', ensureAuthenticated, function(req, res) {
-    chat_list(req.user._id, function(list)
+    chat_list(req.hostname, req.user._id, function(list)
     {
       res.send(list);
     });
@@ -143,13 +143,12 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
-function chat_list(user_id, callback)
+function chat_list(host, user_id, callback)
 {
   var body = [];
   var options = {
-      host: 'localhost',
+      host: host,
       path: '/users-chats/list',
-      port: 3002,
       headers: {
         'USER-ID': user_id,
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY

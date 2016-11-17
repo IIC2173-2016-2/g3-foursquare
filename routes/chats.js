@@ -71,8 +71,9 @@ router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
     }
     join_chat(req.hostname, id, req.user._id, req.user.username, function(response){
       console.log(response.body);
-      res.redirect('../../../chat/chat_room/' + id);
-      res.end();
+      res.send({redirect_to: 'https://' + req.hostname + '/chat/chat_room/' + id});
+      //res.redirect('../../../chat/chat_room/' + id);
+      //res.end();
     });
   });
 });

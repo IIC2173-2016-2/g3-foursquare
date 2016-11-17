@@ -59,9 +59,9 @@ function join_chat()
   $.ajax({
     url: "/locations/join_chat/{{id}}/{{venue_name}}",
     type: "Get",
-    complete: function() {
+    success: function(response) {
         //called when complete
-        //window.location.replace(`https://{{host}}/chat_room/{{id}}`);
+        window.location.replace(response.redirect_to);
         console.log('process complete');
     },
   });

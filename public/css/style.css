@@ -108,4 +108,21 @@ footer{
 
 .location-link:hover{
   text-decoration: none;
+  color: #86f442;
+}
+
+#main-nav{
+  background-color: #4fc1c1;
+  color: #f6f6f6 !important;
+}
+#brand{
+  font-size: 24px;
+  color: #f6f6f6 !important;
+}
+.nav-button{
+  font-size: 18px;
+  color: #f6f6f6 !important;
+}
+.nav-button:hover{
+  color: #86f442 !important;
 }

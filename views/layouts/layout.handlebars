@@ -19,23 +19,41 @@
 </head>
 <body>
 	<div class="container">
-      <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            {{#if username}}
-              <li role="presentation"><a href="/locations">Dashboard</a></li>
-							<li role="presentation"><a href="/my_chats">Mis Chats</a></li>
-              <li role="presentation"><a href="/users/logout">Log out</a></li>
-            {{else}}
-						<li role="presentation"><a href="/locations">Dashboard</a></li>
-              <li role="presentation"><a href="/users/login">Login</a></li>
-							<li role="presentation"><a href="/my_chats">Mis Chats</a></li>
-              <li role="presentation"><a href="/users/register">Register</a></li>
-            {{/if}}
-          </ul>
-        </nav>
-        <h3 class="text-muted">EduardoChat</h3>
-      </div>
+      <nav class="navbar navbar-default navbar-custom navbar-fixed-top" id="main-nav">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Navigate</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" id="brand" href="#">EduardoChat</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="nav-button" href="./">Dashboard</a>
+                    </li>
+                    <li>
+                        <a class="nav-button" href="./locations">Chats Cercanos</a>
+                    </li>
+                    <li>
+                        <a class="nav-button" href="./my_chats">Mis Chats</a>
+                    </li>
+                    <li>
+                        <a class="nav-button" href="./arquicoins">Arquicoins</a>
+                    </li>
+                    <li>
+                        <a class="nav-button" href="./users/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
 
 
       <div class="row">

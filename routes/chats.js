@@ -5,6 +5,7 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var request = require('request');
 var jwt = require('jsonwebtoken');
+var https = require('https');
 
 function ensureAuthenticated(req, res, next) {
 

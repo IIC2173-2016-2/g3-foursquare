@@ -7,6 +7,7 @@ var http = require('http');
 var redis = require('redis');
 var app = express();
 var jwt = require('jsonwebtoken');
+var request = require('request');
 
 var login = '/users/login';
 
@@ -147,24 +148,23 @@ function chat_list(host, user_id, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/users-chats/list',
+      url: 'https://' + host + '/users-chats/list',
       headers: {
         'USER-ID': user_id,
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
 
-  http.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          response = JSON.parse(body);
-          callback(response);
-      });
-  }).end();
+  request(options, function(err, res) {
+      if(err)
+    {
+      console.log(err);
+    }
+    else
+    {
+      callback(res);
+    }
+  });
 }
 
 module.exports = router;

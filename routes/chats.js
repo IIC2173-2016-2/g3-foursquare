@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require('path');
 var handlebars = require('handlebars');
 var fs = require('fs');
-var https = require('https');
+var request = require('request');
 var jwt = require('jsonwebtoken');
 
 function ensureAuthenticated(req, res, next) {
@@ -116,23 +116,23 @@ function is_chat_created(host, chat_id, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/api/v1/is_chat_created',
+      url: host + '/api/v1/is_chat_created',
       headers: {
         'CHAT-ID': chat_id,
         'CHAT-API-SECRET-KEY': process.env.CHAT_API_SECRET_KEY
       }
   };
 
-  https.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          callback(res);
-      });
-  }).end();
+  request(options, function(err, res) {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {      
+      callback(res);
+    }
+  });
 }
 
 function join_chat(host, chat_id, user_id, username, callback)

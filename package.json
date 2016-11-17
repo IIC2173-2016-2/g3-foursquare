@@ -15,7 +15,8 @@
     "express-handlebars": "*",
     "express-messages": "*",
     "express-session": "*",
-    "jsonwebtoken": "*",
+    "jsonwebtoken": "*",    
+    "request": "^2.78.0",
     "redis": "*"
   },
   "repository": {

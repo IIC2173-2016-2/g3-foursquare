@@ -48,9 +48,11 @@ router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
     {
       console.log(err);
     }
-    create_chat(req.hostname, id, venue, function()
+    create_chat(req.hostname, id, venue, function(response)
     {
-      join_chat(req.hostname, id, req.user._id, req.user.username, function(){
+      console.log(response);
+      join_chat(req.hostname, id, req.user._id, req.user.username, function(response){
+        console.log(response);
         res.redirect('../../../chat_room/' + id);
         res.end();
       });
@@ -67,7 +69,8 @@ router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
     {
       console.log(err);
     }
-    join_chat(req.hostname, id, req.user._id, req.user.username, function(){
+    join_chat(req.hostname, id, req.user._id, req.user.username, function(response){
+      console.log(response);
       res.redirect('../../../chat_room/' + id);
       res.end();
     });
@@ -154,7 +157,7 @@ function join_chat(host, chat_id, user_id, username, callback)
       console.log(err);
     }
     else
-    {      
+    {     
       callback(res);
     }
   });

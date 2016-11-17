@@ -22,13 +22,6 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
-router.get('/my_chats_list', ensureAuthenticated, function(req, res){
-  chat_list(req.user._id, function(list)
-    {
-      res.send(list);
-    });
-})
-
 router.get('/chat_created/:id', function(req, res) {
     console.log("revisa que esta creado");
     var id = req.params.id
@@ -40,16 +33,15 @@ router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
   var id = req.params.id
   var venue = req.params.venue
 
-  res.redirect('../../../chat_room/' + id);
-
-  register_chat(req.user._id, id, function(err){
+  register_chat(req.user._id, id, venue, function(err){
     if(err)
     {
       console.log(err);
     }
     create_chat(id, venue, function()
     {
-      join_chat(id, req.user._id, req.user.username, function(){        
+      join_chat(id, req.user._id, req.user.username, function(){
+        res.redirect('../../../chat_room/' + id);     
         res.end();
       });
     });
@@ -60,14 +52,13 @@ router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
   var id = req.params.id
   var venue = req.params.venue
 
-  res.redirect('../../../chat_room/' + id);
-
-  register_chat(req.user._id, id, function(err){
+  register_chat(req.user._id, id, venue, function(err){
     if(err)
     {
       console.log(err);
     }
     join_chat(id, req.user._id, req.user.username, function(){
+      res.redirect('../../../chat_room/' + id);
       res.end();
     });
   });  
@@ -163,7 +154,7 @@ function create_chat(chat_id, chat_name, callback)
   }).end();
 }
 
-function register_chat(user_id, chat_id, callback)
+function register_chat(user_id, chat_id, chat_name, callback)
 {
   var body = [];
   var options = {
@@ -173,6 +164,7 @@ function register_chat(user_id, chat_id, callback)
       headers: {
         'USER-ID': user_id,
         'CHAT-ID': chat_id,
+        'NAME': chat_name,
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };

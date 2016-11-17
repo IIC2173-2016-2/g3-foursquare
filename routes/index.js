@@ -30,12 +30,11 @@ router.get('/my_chats', ensureAuthenticated, function(req, res) {
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);
 
-router.get('/my_chats_list', function(req, res) {
-/*
-DEVUELVE LOS CHATS EN LOS CUAL EL USUARIO ESTA HABILITADO PARA CHATEAR
-*/
-
-
+router.get('/my_chats_list', ensureAuthenticated, function(req, res) {
+    chat_list(req.user._id, function(list)
+    {
+      res.send(list);
+    });
 });
 
 router.get('/foursquare/:lat/:long', function(req, res) {
@@ -139,6 +138,31 @@ function ensureAuthenticated(req, res, next) {
             console.log(err);
         }
     });
+}
+
+function chat_list(user_id, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/users-chats/list',
+      port: 3002,
+      headers: {
+        'USER-ID': user_id,
+        'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          response = JSON.parse(body);
+          callback(response);
+      });
+  }).end();
 }
 
 module.exports = router;

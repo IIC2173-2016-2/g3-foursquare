@@ -31,7 +31,7 @@ function get_chats () {
           var HTML = ""
           for (var i = 0; i < data.length; i++) {
               var obj = data[i];
-              HTML += '<a class="location-link" ' + "href=/locations/" + obj.id + ">" + obj.name + "</a>";
+              HTML += '<a class="location-link" ' + "href=/locations/" + obj.chat_id + ">" + obj.chat_name + "</a>";
           }
           document.getElementById("chats").innerHTML = HTML;
           console.log('process success');

@@ -3,9 +3,8 @@ var router = express.Router();
 var path = require('path');
 var handlebars = require('handlebars');
 var fs = require('fs');
-var http = require('http');
+var https = require('https');
 var jwt = require('jsonwebtoken');
-var http = require('http');
 
 function ensureAuthenticated(req, res, next) {
 
@@ -52,11 +51,11 @@ router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
     create_chat(req.hostname, id, venue, function()
     {
       join_chat(req.hostname, id, req.user._id, req.user.username, function(){
-        res.redirect('../../../chat_room/' + id);     
+        res.redirect('../../../chat_room/' + id);
         res.end();
       });
     });
-  });  
+  });
 });
 
 router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
@@ -72,14 +71,12 @@ router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
       res.redirect('../../../chat_room/' + id);
       res.end();
     });
-  });  
+  });
 });
 
 function show_venue(req, res) {
     if (true) {
         get_venue(req.params.location_id, function(venue_name, photos) {
-            console.log("asdkaspodaosdaopskdaskdoaskdok");
-            console.log(photos);
             res.render('create-chat', {
                 username: req.user.username,
                 venue_name: venue_name,
@@ -127,7 +124,7 @@ function is_chat_created(host, chat_id, callback)
       }
   };
 
-  http.request(options, function(res) {
+  https.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });
@@ -152,7 +149,7 @@ function join_chat(host, chat_id, user_id, username, callback)
       }
   };
 
-  var req = http.request(options, function(res) {
+  var req = https.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });
@@ -177,7 +174,7 @@ function create_chat(host, chat_id, chat_name, callback)
       }
   };
 
-  http.request(options, function(res) {
+  https.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });
@@ -201,7 +198,7 @@ function register_chat(host, user_id, chat_id, chat_name, callback)
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
-  http.request(options, function(res) {
+  https.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });
@@ -224,7 +221,7 @@ function chat_list(host, user_id, callback)
       }
   };
 
-  http.request(options, function(res) {
+  https.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });

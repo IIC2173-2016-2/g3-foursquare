@@ -17,7 +17,8 @@ router.get('/', function(req, res) {
 router.get('/locations', ensureAuthenticated, function(req, res) {
     //if(validate_token(req)){
     res.render('index', {
-        host: req.hostname
+        host: req.hostname,
+        username: req.user.username,
     }); //}
     //else{
     //res.redirect(login_path);
@@ -25,7 +26,9 @@ router.get('/locations', ensureAuthenticated, function(req, res) {
 });
 
 router.get('/my_chats', ensureAuthenticated, function(req, res) {
-    res.render('my_chats');
+    res.render('my_chats',{
+      username: req.user.username,
+    });
 });
 
 router.get('/locations/:location_id', ensureAuthenticated, show_venue);

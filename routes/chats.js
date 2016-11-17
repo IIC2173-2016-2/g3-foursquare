@@ -5,7 +5,6 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var request = require('request');
 var jwt = require('jsonwebtoken');
-var https = require('https');
 
 function ensureAuthenticated(req, res, next) {
 
@@ -188,8 +187,7 @@ function register_chat(host, user_id, chat_id, chat_name, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/users-chats/register',
+      url: 'https://' + host + '/users-chats/register',
       headers: {
         'USER-ID': user_id,
         'CHAT-ID': chat_id,
@@ -197,39 +195,32 @@ function register_chat(host, user_id, chat_id, chat_name, callback)
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
-  https.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          callback(body);
-      });
-  }).end();
+  request(options, function(err, res) {
+    callback(err);
+  });
 }
 
 function chat_list(host, user_id, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/users-chats/list',
+      url: 'https://' + host + '/users-chats/list',
       headers: {
         'USER-ID': user_id,
         'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
 
-  https.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          response = JSON.parse(body);
-          callback(response);
-      });
-  }).end();
+  request(options, function(err, res) {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {      
+      callback(res);
+    }
+  });
 }
 
 module.exports = router;

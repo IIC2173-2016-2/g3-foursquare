@@ -32,13 +32,15 @@ router.get('/my_chats_list', ensureAuthenticated, function(req, res){
 router.get('/chat_created/:id', function(req, res) {
     console.log("revisa que esta creado");
     var id = req.params.id
-    res.setHeader('chat_id', id);
-    res.setHeader('CHAT_API_SECRET_KEY', process.env.CHAT_API_SECRET_KEY)
+    res.setHeader('CHAT-ID', id);
+    res.setHeader('CHAT-API-SECRET-KEY', process.env.CHAT_API_SECRET_KEY)
     res.redirect('/api/v1/is_chat_created');
 });
 router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
   var id = req.params.id
   var venue = req.params.venue
+
+  res.redirect('../../../chat_room/' + id);
 
   register_chat(req.user._id, id, function(err){
     if(err)
@@ -47,8 +49,7 @@ router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
     }
     create_chat(id, venue, function()
     {
-      join_chat(id, req.user._id, req.user.username, function(){
-        res.redirect('chat_room/' + id);
+      join_chat(id, req.user._id, req.user.username, function(){        
         res.end();
       });
     });
@@ -59,13 +60,14 @@ router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
   var id = req.params.id
   var venue = req.params.venue
 
+  res.redirect('../../../chat_room/' + id);
+
   register_chat(req.user._id, id, function(err){
     if(err)
     {
       console.log(err);
     }
     join_chat(id, req.user._id, req.user.username, function(){
-      res.redirect('chat_room/' + id);
       res.end();
     });
   });  
@@ -119,10 +121,10 @@ function join_chat(chat_id, user_id, username, callback)
       path: '/api/v1/join_chat',
       port: 3000,
       headers: {
-        'user_id': user_id,
-        'chat_id': chat_id,
-        'username': username,
-        'CHAT_API_SECRET_KEY': process.env.CHAT_API_SECRET_KEY
+        'USER-ID': user_id,
+        'CHAT-ID': chat_id,
+        'USERNAME': username,
+        'CHAT-API-SECRET-KEY': process.env.CHAT_API_SECRET_KEY
       }
   };
 
@@ -144,9 +146,9 @@ function create_chat(chat_id, chat_name, callback)
       path: '/api/v1/create_chat',
       port: 3000,
       headers: {
-        'chat_name': chat_name,
-        'chat_id': chat_id,
-        'CHAT_API_SECRET_KEY': process.env.CHAT_API_SECRET_KEY
+        'CHAT-NAME': chat_name,
+        'CHAT-ID': chat_id,
+        'CHAT-API-SECRET-KEY': process.env.CHAT_API_SECRET_KEY
       }
   };
 
@@ -169,12 +171,11 @@ function register_chat(user_id, chat_id, callback)
       path: '/users-chats/register',
       port: 3002,
       headers: {
-        'user_id': user_id,
-        'chat_id': chat_id,
-        'USERS_CHAT_API_KEY': process.env.USERS_CHAT_API_KEY
+        'USER-ID': user_id,
+        'CHAT-ID': chat_id,
+        'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
-
   http.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
@@ -194,8 +195,8 @@ function chat_list(user_id, callback)
       path: '/users-chats/list',
       port: 3002,
       headers: {
-        'user_id': user_id,
-        'USERS_CHAT_API_KEY': 123
+        'USER-ID': user_id,
+        'USERS-CHAT-API-KEY': process.env.USERS_CHAT_API_KEY
       }
   };
 

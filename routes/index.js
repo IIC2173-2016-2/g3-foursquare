@@ -162,7 +162,7 @@ function chat_list(host, user_id, callback)
     }
     else
     {
-      callback(res.body);
+      callback(JSON.stringify(res.body));
     }
   });
 }

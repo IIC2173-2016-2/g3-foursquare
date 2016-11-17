@@ -116,7 +116,7 @@ function is_chat_created(host, chat_id, callback)
 {
   var body = [];
   var options = {
-      url: host + '/api/v1/is_chat_created',
+      url: 'https://' + host + '/api/v1/is_chat_created',
       headers: {
         'CHAT-ID': chat_id,
         'CHAT-API-SECRET-KEY': process.env.CHAT_API_SECRET_KEY
@@ -139,7 +139,7 @@ function join_chat(host, chat_id, user_id, username, callback)
 {
   var body = [];
   var options = {
-      url: host + '/api/v1/join_chat',
+      url: 'https://' + host + '/api/v1/join_chat',
       headers: {
         'USER-ID': user_id,
         'CHAT-ID': chat_id,
@@ -163,7 +163,7 @@ function create_chat(host, chat_id, chat_name, callback)
 {
   var body = [];
   var options = {
-      url: host + '/api/v1/create_chat',
+      url: 'https://' + host + '/api/v1/create_chat',
       headers: {
         'CHAT-NAME': chat_name,
         'CHAT-ID': chat_id,

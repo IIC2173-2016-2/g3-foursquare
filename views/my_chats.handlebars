@@ -33,6 +33,7 @@ function get_chats () {
           console.log(data);
           chats = JSON.parse(data);
           console.log(chats);
+          console.log(chats[0]);
           for (var i = 0; i < chats.length; i++) {
               var obj = chats[i];
               HTML += '<a class="location-link" ' + "href=/locations/" + obj.chat_id + ">" + obj.chat_name + "</a>";

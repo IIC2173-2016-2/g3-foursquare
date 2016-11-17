@@ -139,8 +139,7 @@ function join_chat(host, chat_id, user_id, username, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/api/v1/join_chat',
+      url: host + '/api/v1/join_chat',
       headers: {
         'USER-ID': user_id,
         'CHAT-ID': chat_id,
@@ -149,24 +148,22 @@ function join_chat(host, chat_id, user_id, username, callback)
       }
   };
 
-  var req = https.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          callback(body);
-      });
-  })
-  console.log(req);
-  req.end();
+  request(options, function(err, res) {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {      
+      callback(res);
+    }
+  });
 }
 function create_chat(host, chat_id, chat_name, callback)
 {
   var body = [];
   var options = {
-      host: host,
-      path: '/api/v1/create_chat',
+      url: host + '/api/v1/create_chat',
       headers: {
         'CHAT-NAME': chat_name,
         'CHAT-ID': chat_id,
@@ -174,15 +171,16 @@ function create_chat(host, chat_id, chat_name, callback)
       }
   };
 
-  https.request(options, function(res) {
-      res.on('data', function(chunk) {
-          body.push(chunk);
-      });
-      res.on('end', function() {
-          body = Buffer.concat(body).toString();
-          callback(body);
-      });
-  }).end();
+  request(options, function(err, res) {
+    if(err)
+    {
+      console.log(err);
+    }
+    else
+    {      
+      callback(res);
+    }
+  });
 }
 
 function register_chat(host, user_id, chat_id, chat_name, callback)

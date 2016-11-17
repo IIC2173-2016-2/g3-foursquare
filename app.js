@@ -1,11 +1,11 @@
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var exphbs = require('express-handlebars');
 var session = require('express-session');
 var routes = require('./routes/index');
-var chats = require('./routes/chats')
+var chats = require('./routes/chats');
+var bodyParser = require('body-parser');
 
 // Init App
 var app = express();

@@ -5,6 +5,7 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var http = require('http');
 var jwt = require('jsonwebtoken');
+var http = require('http');
 
 function ensureAuthenticated(req, res, next) {
 
@@ -21,6 +22,12 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
+router.get('/my_chats_list', ensureAuthenticated, function(req, res){
+  chat_list(req.user._id, function(list)
+    {
+      res.send(list);
+    });
+})
 
 router.get('/chat_created/:id', function(req, res) {
     console.log("revisa que esta creado");
@@ -30,53 +37,38 @@ router.get('/chat_created/:id', function(req, res) {
     res.redirect('/api/v1/is_chat_created');
 });
 router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
-    var id = req.params.id
-    var venue = req.params.venue
+  var id = req.params.id
+  var venue = req.params.venue
 
-		/*
-		AGREGAR LA CONEXION A LA API DEL SEBA, g3-auth para poder registrar a un
-		usuario un chat para luego ver en que chats esta conectado
-		*/
-
-    // https = require("https");
-		// var options = {
-		//   host: 'www.google.com',
-		//   port: 80,
-		//   path: '/upload',
-		//   method: 'POST'
-		// };
-		//
-		// var req = http.request(options, function(res) {
-		//   console.log('STATUS: ' + res.statusCode);
-		//   console.log('HEADERS: ' + JSON.stringify(res.headers));
-		//   res.setEncoding('utf8');
-		//   res.on('data', function (chunk) {
-		//     console.log('BODY: ' + chunk);
-		//   });
-		// });
-
-    // LOOK IN COOKIE THE TOKEN USERNAME
-
-    res.setHeader('chat_id', id);
-    res.setHeader('chat_name', venue);
-    res.setHeader('CHAT_API_SECRET_KEY', process.env.CHAT_API_SECRET_KEY)
-    res.redirect('/api/v1/create_chat');
+  register_chat(req.user._id, id, function(err){
+    if(err)
+    {
+      console.log(err);
+    }
+    create_chat(id, venue, function()
+    {
+      join_chat(id, req.user._id, req.user.username, function(){
+        res.redirect('chat_room/' + id);
+        res.end();
+      });
+    });
+  });  
 });
 
 router.get('/join_chat/:id/:venue', ensureAuthenticated, function(req, res) {
+  var id = req.params.id
+  var venue = req.params.venue
 
-	/*
-	AGREGAR LA CONEXION A LA API DEL SEBA, g3-auth para poder registrar a un
-	usuario un chat para luego ver en que chats esta conectado
-	*/
-	
-    var id = req.params.id
-    var venue = req.params.venue
-    res.setHeader('chat_id', id);
-    res.setHeader('user_id', req.user._id);
-    res.setHeader('username', req.user.username);
-    res.setHeader('CHAT_API_SECRET_KEY', process.env.CHAT_API_SECRET_KEY);
-    res.redirect('/api/v1/join_chat');
+  register_chat(req.user._id, id, function(err){
+    if(err)
+    {
+      console.log(err);
+    }
+    join_chat(id, req.user._id, req.user.username, function(){
+      res.redirect('chat_room/' + id);
+      res.end();
+    });
+  });  
 });
 
 function show_venue(req, res) {
@@ -117,6 +109,106 @@ function get_venue(venue_id, callback) {
             callback(venue['name'], venue['photos']);
         });
     }).end();
+}
+
+function join_chat(chat_id, user_id, username, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/api/v1/join_chat',
+      port: 3000,
+      headers: {
+        'user_id': user_id,
+        'chat_id': chat_id,
+        'username': username,
+        'CHAT_API_SECRET_KEY': process.env.CHAT_API_SECRET_KEY
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          callback(body);
+      });
+  }).end();
+}
+function create_chat(chat_id, chat_name, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/api/v1/create_chat',
+      port: 3000,
+      headers: {
+        'chat_name': chat_name,
+        'chat_id': chat_id,
+        'CHAT_API_SECRET_KEY': process.env.CHAT_API_SECRET_KEY
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          callback(body);
+      });
+  }).end();
+}
+
+function register_chat(user_id, chat_id, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/users-chats/register',
+      port: 3002,
+      headers: {
+        'user_id': user_id,
+        'chat_id': chat_id,
+        'USERS_CHAT_API_KEY': process.env.USERS_CHAT_API_KEY
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          callback(body);
+      });
+  }).end();
+}
+
+function chat_list(user_id, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/users-chats/list',
+      port: 3002,
+      headers: {
+        'user_id': user_id,
+        'USERS_CHAT_API_KEY': 123
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          response = JSON.parse(body);
+          callback(response);
+      });
+  }).end();
 }
 
 module.exports = router;

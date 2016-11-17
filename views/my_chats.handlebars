@@ -31,7 +31,7 @@ function get_chats () {
       success: function(data) {
           var HTML = ""
           console.log(data);
-          chats = JSON.parse(data);
+          chats = JSON.parse(JSON.parse(data));
           console.log(chats);
           console.log(chats[0]);
           for (var i = 0; i < chats.length; i++) {

@@ -22,12 +22,23 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
-router.get('/chat_created/:id', function(req, res) {
+router.get('/chat_created/:id', function(req, res, next) {
     console.log("revisa que esta creado");
     var id = req.params.id
-    res.setHeader('CHAT-ID', id);
-    res.setHeader('CHAT-API-SECRET-KEY', process.env.CHAT_API_SECRET_KEY)
-    res.redirect('/api/v1/is_chat_created');
+    is_chat_created(id, function(response){
+      console.log(response.statusCode);
+      if(response.statusCode==200)
+      {
+        res.end(JSON.stringify({status: 200}));
+      }
+      else if(response.statusCode==404)
+      {
+        res.status = 404;
+        var err = new Error('not found');
+        err.status = 404;
+        next(err);
+      }
+    });
 });
 router.get('/create_chat/:id/:venue', ensureAuthenticated, function(req, res) {
   var id = req.params.id
@@ -104,6 +115,30 @@ function get_venue(venue_id, callback) {
     }).end();
 }
 
+function is_chat_created(chat_id, callback)
+{
+  var body = [];
+  var options = {
+      host: 'localhost',
+      path: '/api/v1/is_chat_created',
+      port: 3000,
+      headers: {
+        'CHAT-ID': chat_id,
+        'CHAT-API-SECRET-KEY': process.env.CHAT_API_SECRET_KEY
+      }
+  };
+
+  http.request(options, function(res) {
+      res.on('data', function(chunk) {
+          body.push(chunk);
+      });
+      res.on('end', function() {
+          body = Buffer.concat(body).toString();
+          callback(res);
+      });
+  }).end();
+}
+
 function join_chat(chat_id, user_id, username, callback)
 {
   var body = [];
@@ -119,7 +154,7 @@ function join_chat(chat_id, user_id, username, callback)
       }
   };
 
-  http.request(options, function(res) {
+  var req = http.request(options, function(res) {
       res.on('data', function(chunk) {
           body.push(chunk);
       });
@@ -127,7 +162,9 @@ function join_chat(chat_id, user_id, username, callback)
           body = Buffer.concat(body).toString();
           callback(body);
       });
-  }).end();
+  })
+  console.log(req);
+  req.end();
 }
 function create_chat(chat_id, chat_name, callback)
 {

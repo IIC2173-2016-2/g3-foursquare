@@ -28,7 +28,8 @@ router.get('/chat_created/:id', function(req, res, next) {
       console.log(response.statusCode);
       if(response.statusCode==200)
       {
-        res.end(JSON.stringify({status: 200}));
+        res.write(`{\"body\": ${response.body}}`);
+        res.end();
       }
       else if(response.statusCode==404)
       {

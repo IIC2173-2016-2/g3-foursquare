@@ -21,7 +21,8 @@ function check_for_chat(){
       type: "Get",
       success: function(response) {
         console.log("entra a success");
-        $("#enter-btn").click(join_chat); 
+        $("#enter-btn").click(join_chat);
+        $("#user-count").html("Usuarios conectados: " + JSON.parse(response).body.users); 
       },
       error: function(jqXHR, text, error)
       {
